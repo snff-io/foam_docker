@@ -1,0 +1,52 @@
+# Use the official OpenFOAM image as the base
+FROM openfoam/openfoam8-paraview56
+
+# Set the user to root for installation purposes
+USER root
+
+# Update the package list
+RUN apt-get update
+
+# Install sudo for elevated privileges and X11 apps for GUI support
+RUN apt-get install -y --no-install-recommends \
+    sudo \
+    x11-apps \
+    x11-xserver-utils \
+    dbus-x11 \
+    libxext-dev \
+    libxrender1 \
+    libxtst6 \
+    libfreetype6 \
+    libfontconfig1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libqt5x11extras5 \
+    qtbase5-dev \
+    qtchooser \
+    qt5-qmake \
+    qtbase5-dev-tools
+
+ENV QT_X11_NO_MITSHM=1
+
+# Add a non-root user 'foamuser' with sudo privileges
+RUN adduser --disabled-password --gecos '' foamuser \
+    && echo 'foamuser ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Switch to the new user
+USER foamuser
+
+# Set the working directory
+WORKDIR /home/foamuser
+
+ENV HOME="/home/foamuser"
+ENV FOAM_RUN="/home/foamuser/src/foam"
+ENV XDG_CONFIG_HOME="/home/foamuser/.config"
+ENV WM_PROJECT_USER_DIR="/home/foamuser"
+ENV FOAM_USER_APPBIN="/home/foamuser/platforms/linux64GccDPInt32Opt/bin"
+ENV FOAM_USER_LIBBIN="/home/foamuser/platforms/linux64GccDPInt32Opt/lib"
+ENV ParaView_MACRO_PATH="/home/foam/src/foam/Macros"
+ENV ParaView_HOME=/"home/foam/src/foam"
+
+
+# As 'foamuser', run bash by default
+CMD ["/bin/bash"]

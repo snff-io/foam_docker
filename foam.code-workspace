@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "../foam"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*Dict": "OpenFOAM",
+			"*Properties": "OpenFOAM",
+			"fvSchemes": "OpenFOAM",
+			"fvSolution": "OpenFOAM",
+			"**/constant/g": "OpenFOAM",
+			"**/0/*": "OpenFOAM"
+		}
+	}
+}
